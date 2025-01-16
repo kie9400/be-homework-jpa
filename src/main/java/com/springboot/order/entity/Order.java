@@ -7,6 +7,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -18,6 +20,7 @@ public class Order {
     private Long orderId;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private OrderStatus orderStatus = OrderStatus.ORDER_REQUEST;
 
     @Column(nullable = false)
@@ -30,8 +33,22 @@ public class Order {
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
-    public void addMember(Member member) {
+    @OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST)
+    private List<OrderCoffee> orderCoffees = new ArrayList<>();
+
+    public void setOrderCoffee(OrderCoffee orderCoffee){
+        orderCoffees.add(orderCoffee);
+
+        if(orderCoffee.getOrder() != this){
+            orderCoffee.setOrder(this);
+        }
+    }
+
+    public void setMember(Member member) {
         this.member = member;
+        if(member.getOrders().contains(this)){
+            member.setOrder(this);
+        }
     }
 
     public enum OrderStatus {

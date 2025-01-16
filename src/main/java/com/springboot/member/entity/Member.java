@@ -42,6 +42,10 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<Order> orders = new ArrayList<>();
 
+    @OneToOne
+    @JoinColumn(name = "STAMP_ID")
+    private Stamp stamp;
+
     public Member(String email) {
         this.email = email;
     }
@@ -52,8 +56,12 @@ public class Member {
         this.phone = phone;
     }
 
-    public void addOrder(Order order) {
+    public void setOrder(Order order) {
         orders.add(order);
+
+        if(order.getMember() != this){
+            order.setMember(this);
+        }
     }
 
     // 추가 된 부분

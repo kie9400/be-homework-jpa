@@ -1,7 +1,9 @@
 package com.springboot.order.service;
 
+import com.springboot.coffee.service.CoffeeService;
 import com.springboot.exception.BusinessLogicException;
 import com.springboot.exception.ExceptionCode;
+import com.springboot.member.entity.Stamp;
 import com.springboot.member.service.MemberService;
 import com.springboot.order.entity.Order;
 import com.springboot.order.repository.OrderRepository;
@@ -12,28 +14,47 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
     private final MemberService memberService;
+    private final CoffeeService coffeeService;
     private final OrderRepository orderRepository;
 
     public OrderService(MemberService memberService,
+                        CoffeeService coffeeService,
                         OrderRepository orderRepository) {
         this.memberService = memberService;
+        this.coffeeService = coffeeService;
         this.orderRepository = orderRepository;
     }
 
     public Order createOrder(Order order) {
         // 회원이 존재하는지 확인
         memberService.findVerifiedMember(order.getMember().getMemberId());
+        int stampCount = 0;
 
         // TODO 커피가 존재하는지 조회하는 로직이 포함되어야 합니다.
+        order.getOrderCoffees().stream()
+                .forEach(orderCoffee -> coffeeService.findVerifiedCoffee(orderCoffee.getCoffee().getCoffeeId()));
+        Stamp stamp = order.getMember().getStamp();
 
+
+       // stamp.setStampCount(stamp.getStampCount() + addStampCount(order));
         return orderRepository.save(order);
     }
 
     // 메서드 추가
+    public int addStampCount(Order order){
+        int stampCount = 0;
+        stampCount = order.getOrderCoffees().stream()
+                .mapToInt(orderCoffee -> orderCoffee.getQuantity())
+                .sum();
+
+        return stampCount;
+    }
+
     public Order updateOrder(Order order) {
         Order findOrder = findVerifiedOrder(order.getOrderId());
 
