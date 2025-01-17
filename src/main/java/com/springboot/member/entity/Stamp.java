@@ -1,5 +1,6 @@
 package com.springboot.member.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,4 +25,5 @@ public class Stamp {
 
     @Column(nullable = false, name = "LAST_CHANGE_DATE")
     private LocalDateTime modifiedAt = LocalDateTime.now();
+
 }

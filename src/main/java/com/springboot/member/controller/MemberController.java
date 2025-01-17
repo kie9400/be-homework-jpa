@@ -30,7 +30,7 @@ import java.util.List;
 @RequestMapping("/v11/members")
 @Validated
 @Slf4j
-public class MemberController {
+public class  MemberController {
     private final static String MEMBER_DEFAULT_URL = "/v11/members";
     private final MemberService memberService;
     private final MemberMapper mapper;

@@ -42,9 +42,9 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<Order> orders = new ArrayList<>();
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "STAMP_ID")
-    private Stamp stamp;
+    private Stamp stamp = new Stamp();
 
     public Member(String email) {
         this.email = email;
