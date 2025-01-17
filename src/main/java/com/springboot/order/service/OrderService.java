@@ -47,7 +47,7 @@ public class OrderService {
         Stamp stamp = findMember.getStamp();
 
 
-       stamp.setStampCount(stamp.getStampCount() + addStampCount(order));
+        stamp.setStampCount(stamp.getStampCount() + addStampCount(order));
         return orderRepository.save(order);
     }
 
